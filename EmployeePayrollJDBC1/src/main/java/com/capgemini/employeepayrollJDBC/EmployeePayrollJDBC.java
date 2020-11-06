@@ -1,8 +1,5 @@
 package com.capgemini.employeepayrollJDBC;
-/**
- * 
- *
- */
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,21 +7,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import com.mysql.cj.jdbc.Driver;
+
 public class EmployeePayrollJDBC {
-	public static void main(String[] args) throws SQLException {
-		String url = "jdbc:mysql://localhost:3306/employee_payroll?useSSL=false";
-		String userName = "root";
-		String password = "Manasi@1998";
-		Connection con = null;
+	static String url = "jdbc:mysql://localhost:3306/employee_payroll?useSSL=false";
+	static String userName = "root";
+	static String password = "Manasi@1998";
+	private static Connection con = null;
+
+	public static Connection getConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, userName, password);
 			System.out.println("Connection Successful");
 
-		}  catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException("cannot find the driver");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		listAllDrivers();
+
 		try {
 			System.out.println("Connecting to database" + url);
 			con = DriverManager.getConnection(url, userName, password);
@@ -32,14 +34,13 @@ public class EmployeePayrollJDBC {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return con;
 	}
-
 	private static void listAllDrivers() {
 		Enumeration<java.sql.Driver> driverList = DriverManager.getDrivers();
 		while (driverList.hasMoreElements()) {
 			Driver driver = (Driver) driverList.nextElement();
 			System.out.println(" " + driver.getClass().getName());
 		}
-    }
+	}
 }
-
