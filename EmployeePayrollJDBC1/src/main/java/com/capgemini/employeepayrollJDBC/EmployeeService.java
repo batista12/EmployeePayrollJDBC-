@@ -1,12 +1,9 @@
 package com.capgemini.employeepayrollJDBC;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 import java.time.LocalDate;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class EmployeeService {
 	List<EmployeeData> employeePayrollList;
@@ -32,7 +29,7 @@ public class EmployeeService {
 				employeePayrollList.add(empDataObj);
 			}
 		} catch (Exception e) {
-			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+			throw new DBException("SQL Exception", DBException.SQL_EXCEPTION);
 		}
 		return employeePayrollList;
 	}
@@ -57,7 +54,7 @@ public class EmployeeService {
 			statement.setString(2, name);
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+			throw new DBException("SQL Exception", DBException.SQL_EXCEPTION);
 		}
 	}
 
@@ -73,5 +70,28 @@ public class EmployeeService {
 				.filter(employeeObj -> ((employeeObj.getName()).equals(name))).findFirst().orElse(null);
 		return employee;
 	}
-
+	public List<EmployeeData> viewEmployeePayrollByJoinDateRange(LocalDate startDate , LocalDate endDate) throws DBException
+	{
+		List<EmployeeData> employeePayrollListByStartDate = new ArrayList<>();
+		String query = "select * from Employee_Payroll where start_date between ? and  ?";
+		try(Connection con = new EmployeePayrollJDBC().getConnection()) {
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			preparedStatement.setDate(1, Date.valueOf(startDate));
+			preparedStatement.setDate(2, Date.valueOf(endDate));
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				int emp_id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				double salary = resultSet.getDouble(3);
+				LocalDate start = resultSet.getDate(4).toLocalDate();
+				empDataObj = new EmployeeData(emp_id, name,salary,start);
+				employeePayrollListByStartDate.add(empDataObj);
+			}
+		} catch (Exception e) {
+			throw new DBException("SQL Exception", DBException.SQL_EXCEPTION);
+		}
+		return employeePayrollListByStartDate;
+	}
 }
+
