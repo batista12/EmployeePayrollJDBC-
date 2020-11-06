@@ -1,5 +1,4 @@
 package com.capgemini.employeepayrollJDBC;
-
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -117,7 +116,7 @@ public class EmployeeService {
 			preparedStatement.setDouble(3, salary);
 			preparedStatement.setDate(4, Date.valueOf(start_date));
 			preparedStatement.executeUpdate();
-			empDataObj = new EmployeeData(name, gender, salary, start_date);
+			empDataObj = new EmployeeData(name, gender, salary, start_date) ;
 			viewEmployeePayroll().add(empDataObj);
 		} catch (Exception e) {
 			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
@@ -170,6 +169,8 @@ public class EmployeeService {
 		}
 		return employeePayrollData;
 	}
+	public EmployeeService getInstance() {
+		return null;
+	}
 }
-
-		
+}
