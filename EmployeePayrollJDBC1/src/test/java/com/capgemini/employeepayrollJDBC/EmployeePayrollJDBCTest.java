@@ -17,5 +17,11 @@ public class EmployeePayrollJDBCTest {
 		List<EmployeeData> empPayrollList = serviceObj.viewEmployeePayroll();
 		assertEquals(3, empPayrollList.size());
 	}
+	@Test
+	public void givenUpdatedSalary_WhenRetrieved_ShouldBeSyncedWithDB() throws DBServiceException{
+		serviceObj.updateSalary("Ambani", 3000000.00);
+		boolean isSynced = serviceObj.check(employeeList, "Ambani", 3000000.00);
+		assertTrue(isSynced);
+	}
 
 }
