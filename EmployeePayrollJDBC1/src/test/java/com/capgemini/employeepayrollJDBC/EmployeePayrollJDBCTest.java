@@ -3,6 +3,7 @@ package com.capgemini.employeepayrollJDBC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.BeforeClass;
@@ -34,6 +35,11 @@ public class EmployeePayrollJDBCTest {
 				EmployeeService.statementType.PREPARED_STATEMENT);
 		boolean result = serviceObj.check(employeeList, "Ambani", 2000000.00);
 		assertTrue(result);
+	}
+	@Test
+	public void givenDateRange_WhenRetrieved_ShouldMatchEmpCount() throws DBException{
+		List<EmployeeData> empPayrollList = serviceObj.viewEmployeePayrollByJoinDateRange(LocalDate.of(2018,02,01), LocalDate.now() );
+		assertEquals(3, empPayrollList.size());
 	}
 
 }
