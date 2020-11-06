@@ -181,5 +181,14 @@ public class EmployeeService {
 	public EmployeeService getInstance() {
 		return null;
 	}
+	public void removeEmployeeFromDB(int empId) throws DBException{
+		String query = String.format("update Employee_Payroll set is_active = false WHERE id= '%s';",empId);
+		try(Connection connection=EmployeePayrollJDBC.getConnection()){
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.executeUpdate();
+		}catch (SQLException e) {
+			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+	}
 }
 }
