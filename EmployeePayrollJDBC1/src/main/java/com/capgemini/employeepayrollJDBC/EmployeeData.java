@@ -10,30 +10,45 @@ public class EmployeeData {
 	private int companyId;
 	private String phoneNumber;
 	private String address;
-	private char gender;
-	private Double salary;
+	private String gender;
+	private String salary;
+	private double basic_pay;
+	private double deductions;
+	private double taxable_pay;
+	private double tax;
+	private double net_pay;
 	private LocalDate startDate;
 	private int[] departmentId;
-	public EmployeeData(int id, String name, String gender, Double salary, LocalDate startDate) {
-		this(name, gender, salary, startDate);
+	public EmployeeData(int id, String name, String salary, LocalDate start, String gender) {
+		this(name, salary, start, gender);
 		this.employeeId = id;
 	}
 
-	public EmployeeData(String name, String gender2, Double salary, LocalDate startDate) {
+	public EmployeeData(String name, String salary, LocalDate startDate, String gender) {
 		this.name = name;
 		this.gender = gender;
 		this.salary = salary;
 		this.startDate = startDate;
 	}
 
-	public EmployeeData(int id, String name, Double salary, LocalDate startDate) {
+	public EmployeeData(int id, String name, String gender, String salary, LocalDate startDate, double basic_pay,
+			double deductions, double taxable_pay, double tax, double net_pay) {
+		this(id, name, gender, startDate, salary);
+		this.employeeId = id;
+		this.basic_pay = basic_pay;
+		this.deductions = deductions;
+		this.taxable_pay = taxable_pay;
+		this.tax = tax;
+		this.net_pay = net_pay;
+
+	}
+
+	public EmployeeData(int id, String name, String salary, LocalDate startDate) {
 		this.employeeId = id;
 		this.name = name;
 		this.salary = salary;
 		this.startDate = startDate;
 	}
-
-	// Getters and Setters
 	public int getEmployeeId() {
 		return employeeId;
 	}
@@ -78,11 +93,11 @@ public class EmployeeData {
 		return employeeId;
 	}
 
-	public char getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
@@ -98,11 +113,11 @@ public class EmployeeData {
 		this.name = name;
 	}
 
-	public Double getSalary() {
+	public String getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Double salary) {
+	public void setSalary(String salary) {
 		this.salary = salary;
 	}
 

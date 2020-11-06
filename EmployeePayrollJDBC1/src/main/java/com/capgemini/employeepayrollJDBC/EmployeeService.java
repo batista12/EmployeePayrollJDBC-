@@ -1,15 +1,23 @@
 package com.capgemini.employeepayrollJDBC;
+
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 import java.time.LocalDate;
 
 public class EmployeeService {
+	private static EmployeeService EmployeeService;
 	List<EmployeeData> employeePayrollList;
 	EmployeeData empDataObj = null;
 
 	public enum statementType {
 		STATEMENT, PREPARED_STATEMENT
+	}
+
+	public static EmployeeService getInstance() {
+		if (EmployeeService == null)
+			EmployeeService = new EmployeeService();
+		return EmployeeService;
 	}
 	public List<EmployeeData> viewEmployeePayroll() throws DBException {
 		List<EmployeeData> employeePayrollList = new ArrayList<>();
@@ -21,7 +29,7 @@ public class EmployeeService {
 			while (resultSet.next()) {
 				int emp_id = resultSet.getInt(1);
 				String name = resultSet.getString(2);
-				double salary = resultSet.getDouble(3);
+				String salary = resultSet.getString(3);
 				LocalDate start = resultSet.getDate(4).toLocalDate();
 				String gender = resultSet.getString(5);
 				empDataObj = new EmployeeData(emp_id, name, salary, start, gender);
@@ -55,14 +63,14 @@ public class EmployeeService {
 		}
 	}
 
-	public boolean check(List<EmployeeData> employeeList, String name, double salary) throws DBException {
+	public boolean check(List<EmployeeData> employeeList, String name, String salary) throws DBException {
 		EmployeeData employeeObj = getEmployee(employeeList, name);
 		employeeObj.setSalary(salary);
 		return employeeObj.equals(getEmployee(viewEmployeePayroll(), name));
 
 	}
 
-	private EmployeeData getEmployee(List<EmployeeData> employeeList, String name) {
+	EmployeeData getEmployee(List<EmployeeData> employeeList, String name) {
 		EmployeeData employee = employeeList.stream()
 				.filter(employeeObj -> ((employeeObj.getName()).equals(name))).findFirst().orElse(null);
 		return employee;
@@ -79,7 +87,7 @@ public class EmployeeService {
 			while (resultSet.next()) {
 				int emp_id = resultSet.getInt(1);
 				String name = resultSet.getString(2);
-				double salary = resultSet.getDouble(3);
+				String salary = resultSet.getString(3);
 				LocalDate start = resultSet.getDate(4).toLocalDate();
 				String gender = resultSet.getString(5);
 				empDataObj = new EmployeeData(emp_id, name, salary, start, gender);
@@ -106,23 +114,23 @@ public class EmployeeService {
 		}
 		return empDataByGender;
 	}
-	public void addNewEmployeeToDB(String name, String gender, double salary, LocalDate start_date)
+	public void addNewEmployeeToDB(String name, String gender, String salary, LocalDate start_date)
 			throws DBException {
 		String query = "insert into Employee_Payroll ( name , gender, salary , start_date) values (?,?,?,?)";
 		try (Connection con = new EmployeePayrollJDBC().getConnection()) {
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			preparedStatement.setString(1, name);
 			preparedStatement.setString(2, gender);
-			preparedStatement.setDouble(3, salary);
+			preparedStatement.setString(3, salary);
 			preparedStatement.setDate(4, Date.valueOf(start_date));
 			preparedStatement.executeUpdate();
-			empDataObj = new EmployeeData(name, gender, salary, start_date) ;
+			empDataObj = new EmployeeData(name, gender, start_date, salary);
 			viewEmployeePayroll().add(empDataObj);
 		} catch (Exception e) {
 			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
 		}
 	}
-
+	public EmployeeData addEmployeeToEmployeeAndPayroll(String name, double salary, String gender,
 	public EmployeeData addEmployeeToEmployeeAndPayroll(String name, double salary, String salary2,
 			LocalDate startDate) throws DBException {
 		int emp_id = -1;
@@ -132,6 +140,7 @@ public class EmployeeService {
 		try (Statement statement = connection.createStatement()) {
 			String sql = String.format(
 					"INSERT INTO employee_payroll(name,gender,salary,startDate) VALUES ('%s','%s','%s','%s')", name,
+					startDate, salary);
 					startDate, salary, Date.valueOf(salary2));
 			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			if (rowAffected == 1) {
@@ -153,7 +162,7 @@ public class EmployeeService {
 					"INSERT INTO payroll_details(employee_id,basic_pay,deductions,taxable_pay,tax,net_pay)VALUES (%s,%s,%s,%s,%s,%s)",
 					emp_id, salary, deductions, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
-			if (rowAffected == 1) {
+				EmployeeData = new EmployeeData(emp_id, name, gender,startDate);
 				employeePayrollData = new EmployeeData(emp_id, name, gender, salary, startDate);
 			}
 		} catch (SQLException e) {
