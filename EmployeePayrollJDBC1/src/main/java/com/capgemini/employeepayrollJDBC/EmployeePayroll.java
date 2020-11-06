@@ -1,5 +1,4 @@
 package com.capgemini.employeepayrollJDBC;
-
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -54,5 +53,8 @@ public class EmployeePayroll {
 			throws DBException {
 		return employeePayrollDBService.viewEmployeeDataGroupedByGender(operation, column);
 	}
+
+}
+public class EmployeePayroll {
 
 }

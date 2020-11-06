@@ -131,15 +131,17 @@ public class EmployeeService {
 		}
 	}
 	public EmployeeData addEmployeeToEmployeeAndPayroll(String name, double salary, String gender,
+	public EmployeeData addEmployeeToEmployeeAndPayroll(String name, double salary, String salary2,
 			LocalDate startDate) throws DBException {
 		int emp_id = -1;
 		Connection connection = null;
-		EmployeeData EmployeeData = null;
+		EmployeeData employeePayrollData = null;
 		connection = new EmployeePayrollJDBC().getConnection();
 		try (Statement statement = connection.createStatement()) {
 			String sql = String.format(
 					"INSERT INTO employee_payroll(name,gender,salary,startDate) VALUES ('%s','%s','%s','%s')", name,
 					startDate, salary);
+					startDate, salary, Date.valueOf(salary2));
 			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
@@ -155,12 +157,13 @@ public class EmployeeService {
 			double taxablePay = salary - deductions;
 			double tax = taxablePay * 0.1;
 			double netPay = salary - tax;
+			String gender = null;
 			String sql = String.format(
 					"INSERT INTO payroll_details(employee_id,basic_pay,deductions,taxable_pay,tax,net_pay)VALUES (%s,%s,%s,%s,%s,%s)",
 					emp_id, salary, deductions, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
-			if (rowAffected == 1) {
 				EmployeeData = new EmployeeData(emp_id, name, gender,startDate);
+				employeePayrollData = new EmployeeData(emp_id, name, gender, salary, startDate);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -173,6 +176,10 @@ public class EmployeeService {
 				}
 			}
 		}
-		return EmployeeData;
+		return employeePayrollData;
 	}
+	public EmployeeService getInstance() {
+		return null;
+	}
+}
 }
