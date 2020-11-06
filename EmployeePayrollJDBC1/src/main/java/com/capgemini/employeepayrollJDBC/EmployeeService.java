@@ -93,5 +93,21 @@ public class EmployeeService {
 		}
 		return employeePayrollListByStartDate;
 	}
+	public Map<String,Double> viewEmployeeDataGroupedByGender(String column , String operation) throws DBException
+	{
+		Map<String,Double> empDataByGender = new HashMap<>();
+		String query = String.format("select gender , %s(%s) from Employee_Payroll group by gender;" , operation , column);
+		try(Connection con = new EmployeePayrollJDBC().getConnection()) {
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				empDataByGender.put(resultSet.getString(1), resultSet.getDouble(2));
+			}
+		}catch (Exception e) {
+			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+		return empDataByGender;
+	}	
 }
 
