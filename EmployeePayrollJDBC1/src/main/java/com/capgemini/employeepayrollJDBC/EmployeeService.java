@@ -25,7 +25,7 @@ public class EmployeeService {
 				String name = resultSet.getString(2);
 				double salary = resultSet.getDouble(3);
 				LocalDate start = resultSet.getDate(4).toLocalDate();
-				empDataObj = new EmployeeData(emp_id, name, salary, start);
+				empDataObj = new EmployeeData(emp_id, name, salary, start, name);
 				employeePayrollList.add(empDataObj);
 			}
 		} catch (Exception e) {
@@ -85,7 +85,7 @@ public class EmployeeService {
 				String name = resultSet.getString(2);
 				double salary = resultSet.getDouble(3);
 				LocalDate start = resultSet.getDate(4).toLocalDate();
-				empDataObj = new EmployeeData(emp_id, name,salary,start);
+				empDataObj = new EmployeeData(emp_id, name,salary,start, name);
 				employeePayrollListByStartDate.add(empDataObj);
 			}
 		} catch (Exception e) {
@@ -108,6 +108,22 @@ public class EmployeeService {
 			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
 		}
 		return empDataByGender;
-	}	
+	}
+	public void addNewEmployeeToDB(String name, String gender, double salary, LocalDate start_date)
+			throws DBException {
+		String query = "insert into Employee_Payroll ( name , gender, salary , start_date) values (?,?,?,?)";
+		try (Connection con = new EmployeePayrollJDBC().getConnection()) {
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, gender);
+			preparedStatement.setDouble(3, salary);
+			preparedStatement.setDate(4, Date.valueOf(start_date));
+			preparedStatement.executeUpdate();
+			empDataObj = new EmployeeData(name, gender, salary, start_date);
+			viewEmployeePayroll().add(empDataObj);
+		} catch (Exception e) {
+			throw new DBException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+	}
 }
 
