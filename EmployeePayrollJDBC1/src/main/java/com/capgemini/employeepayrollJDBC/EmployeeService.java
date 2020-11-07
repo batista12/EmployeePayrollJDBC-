@@ -1,5 +1,4 @@
 package com.capgemini.employeepayrollJDBC;
-
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -167,5 +166,8 @@ public class EmployeeService {
 			}
 		}
 		return EmployeeData;
+	}
+	public EmployeeService getInstance() {
+		return null;
 	}
 }
