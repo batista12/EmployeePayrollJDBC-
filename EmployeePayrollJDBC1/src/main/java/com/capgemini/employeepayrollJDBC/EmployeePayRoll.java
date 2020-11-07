@@ -1,5 +1,4 @@
 package com.capgemini.employeepayrollJDBC;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -86,6 +85,22 @@ public class EmployeePayRoll {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + companyId;
+		result = prime * result + ((departmentName == null) ? 0 : departmentName.hashCode());
+		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(salary);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+		return result;
 	}
 
 	@Override
