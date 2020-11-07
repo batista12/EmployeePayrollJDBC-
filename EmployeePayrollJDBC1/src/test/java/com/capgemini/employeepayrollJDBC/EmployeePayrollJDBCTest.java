@@ -88,4 +88,10 @@ public class EmployeePayrollJDBCTest {
 		boolean isSynced = serviceObj.check(employeeList, "Raina", 6000000.00);
 		assertTrue(isSynced);
 	}
+	@Test
+	public void givenEmployeeId_WhenDeletedUsing_ShouldSyncWithDB() throws DBException {
+		serviceObj.removeEmployeeFromDB(3);
+		assertEquals(2, empPayrollList.size());
+
+	}
 }
