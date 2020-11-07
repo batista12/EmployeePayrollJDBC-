@@ -14,12 +14,12 @@ public class EmployeeData {
 	private Double salary;
 	private LocalDate startDate;
 	private int[] departmentId;
-	public EmployeeData(int id, String name, char gender, Double salary, LocalDate startDate) {
+	public EmployeeData(int id, String name, String gender, Double salary, LocalDate startDate) {
 		this(name, gender, salary, startDate);
 		this.employeeId = id;
 	}
 
-	public EmployeeData(String name, char gender, Double salary, LocalDate startDate) {
+	public EmployeeData(String name, String gender2, Double salary, LocalDate startDate) {
 		this.name = name;
 		this.gender = gender;
 		this.salary = salary;
